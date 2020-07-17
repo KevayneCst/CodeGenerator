@@ -38,7 +38,24 @@ public class Core {
 	}
 
 	private String iteration(int varIndex) {
-		return className + " " + varName + varIndex + " = new " + className + convertParameters() + ";";
+		return className + " " + varName + varIndex + " = " +endPrefix() + ";";
+	}
+	
+	private String endPrefix() {
+		switch (className) {
+		case "String":
+			return "\"\"";
+		case "int":
+			return "0";
+		case "boolean":
+			return "true";
+		case "double":
+			return "0.0";
+		case "float":
+			return "0.0f";
+		default:
+			return "new " + className + convertParameters();
+		}
 	}
 
 	private String convertParameters() {
@@ -56,7 +73,7 @@ public class Core {
 	}
 
 	public static void main(String[] args) {
-		Core c = new Core("Myclass", "var", 1, true);
+		Core c = new Core("String", "s", 12, true);
 		c.iterateAndPrint(100);
 	}
 }
