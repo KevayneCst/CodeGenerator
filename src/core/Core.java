@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Core {
 
+	private static final String NEEDED_STRING = "%d";
+	
 	private String className;
 	private String varName;
 	private int beginIndex;
@@ -13,7 +15,11 @@ public class Core {
 
 	public Core(String className, String prefixVar, int beginIndex, boolean insertTabBefore, String... params) {
 		this.className = className;
-		this.varName = prefixVar;
+		if (prefixVar.contains(NEEDED_STRING)) {
+			this.varName = prefixVar;
+		} else {
+			throw new IllegalArgumentException("Il manque au moins un \""+NEEDED_STRING+"\" dans le prefix de la variable");
+		}
 		this.beginIndex = beginIndex;
 		this.insertTabBefore = insertTabBefore;
 		this.params = new ArrayList<>();
@@ -38,9 +44,13 @@ public class Core {
 	}
 
 	private String iteration(int varIndex) {
-		return className + " " + varName + varIndex + " = " +endPrefix() + ";";
+		return className + " " + threatVarName(varIndex) + " = " + endPrefix() + ";";
 	}
 	
+	private String threatVarName(int varIndex) {
+		return varName.replaceAll(NEEDED_STRING, varIndex+"");
+	}
+
 	private String endPrefix() {
 		switch (className) {
 		case "String":
@@ -73,7 +83,8 @@ public class Core {
 	}
 
 	public static void main(String[] args) {
-		Core c = new Core("String", "s", 12, true);
-		c.iterateAndPrint(100);
+
+		Core c = new Core("String", "test%dothers", 51, true); c.iterateAndPrint(50);
+		 
 	}
 }
