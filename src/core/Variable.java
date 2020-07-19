@@ -3,7 +3,7 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Core {
+public class Variable {
 
 	private static final String NEEDED_STRING = "%d";
 	
@@ -13,7 +13,7 @@ public class Core {
 	private boolean insertTabBefore;
 	private List<String> params;
 
-	public Core(String className, String prefixVar, int beginIndex, boolean insertTabBefore, String... params) {
+	public Variable(String className, String prefixVar, int beginIndex, boolean insertTabBefore, String... params) {
 		this.className = className;
 		if (prefixVar.contains(NEEDED_STRING)) {
 			this.varName = prefixVar;
@@ -44,14 +44,14 @@ public class Core {
 	}
 
 	private String iteration(int varIndex) {
-		return className + " " + threatVarName(varIndex) + " = " + endPrefix() + ";";
+		return className + " " + threatVarName(varIndex) + " = " + endPrefix(varIndex) + ";";
 	}
 	
 	private String threatVarName(int varIndex) {
 		return varName.replaceAll(NEEDED_STRING, varIndex+"");
 	}
 
-	private String endPrefix() {
+	private String endPrefix(int varIndex) {
 		switch (className) {
 		case "String":
 			return "\"\"";
@@ -64,18 +64,24 @@ public class Core {
 		case "float":
 			return "0.0f";
 		default:
-			return "new " + className + convertParameters();
+			return "new " + className + convertParameters(varIndex);
 		}
 	}
 
-	private String convertParameters() {
+	private String convertParameters(int varIndex) {
 		if (params.isEmpty()) {
 			return "()";
 		} else {
 			StringBuilder sb = new StringBuilder();
 			sb.append("(");
-			for (String s : params) {
-				sb.append(s + ",");
+			for (int i=0; i<params.size(); i++) {
+				String currentParam = params.get(i).replaceAll(NEEDED_STRING, varIndex+"");
+				if (i == params.size() - 1) {
+					sb.append(currentParam);
+				} else {
+					sb.append(currentParam + ",");
+				}
+				
 			}
 			sb.append(")");
 			return sb.toString();
@@ -84,7 +90,8 @@ public class Core {
 
 	public static void main(String[] args) {
 
-		Core c = new Core("String", "test%dothers", 51, true); c.iterateAndPrint(50);
+		Variable c = new Variable("Sentence", "st%d", 1, false, "param%d"); 
+		c.iterateAndPrint(50);
 		 
 	}
 }
