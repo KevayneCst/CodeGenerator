@@ -3,7 +3,7 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Variable {
+public class Variable implements Iteration {
 
 	private static final String NEEDED_STRING = "%d";
 	
@@ -90,7 +90,7 @@ public class Variable {
 
 	public static void main(String[] args) {
 
-		Variable c = new Variable("Sentence", "st%d", 1, false, "param%d"); 
+		Variable c = new Variable("String", "s%d", 51, true); 
 		c.iterateAndPrint(50);
 		 
 	}
